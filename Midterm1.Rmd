@@ -1,0 +1,168 @@
+---
+title: "Midterm 1"
+author: "Suprama Bhujel"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(stargazer)
+library(ggrepel)
+library(summarytools)
+library(haven)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Midterm 1: Due Tuesday February 20, 2024
+
+**1) Summarize your data. For example, what are the average and standard deviation of height and wages. Assuming height is normally distributed draw the probability distribution curve for height. (10 points)**
+
+```{r}
+dta <- read_dta("Ch4_Exercise5_Height_and_Wages_UK.dta")
+
+dta |>
+  summarytools::descr()
+```
+
+Wages (gwage33): On average, individuals earn around £10.39 per hour, with a wide range from £0.12 to £2500.00 per hour.The distribution of wages is heavily skewed to the right, indicating a long tail of high earners.Additionally, the distribution is highly peaked, suggesting many individuals earn around the average with extreme values present.
+
+Height (height33): The average height in the dataset is approximately 69.40 inches, with a standard deviation of 4.19 inches.Heights range from as low as 22.44 inches to as high as 79.53 inches.Unlike wages, the distribution of heights is negatively skewed, indicating a slight tail towards shorter heights.
+The distribution also exhibits elevated kurtosis, implying a sharper peak around the mean.
+
+Gender (male):The dataset exclusively comprises male individuals, with no variability in gender distribution.
+
+
+```{r}
+# Plotting the probability distribution curve for height
+curve(dnorm(x, mean = 69.40, sd = 4.19), from = 0, to = 100,
+      main = "Probability Distribution Curve for Height",
+      xlab = "Height", ylab = "Density", col = "blue", lwd = 2)
+
+```
+
+**2) Create a scatterplot with height on the horizontal axis and wages on the vertical axis. Do any of the observations stand out on this graph? Why? (5 points)**
+
+```{r}
+
+ggplot(data = dta, aes(x = height33, y = gwage33)) +
+  geom_point() +
+  labs(title = "Scatterplot of Height vs. Wages",
+       x = "Height", y = "Wages")
+```
+
+The scatterplot reveals a clustered distribution of data points primarily between 6 and 8 inches on the vertical axis, corresponding to wages. However, there are noticeable outliers in the dataset that stand out from the clustered pattern. These outliers likely represent individuals with extremely high wages compared to the rest of the dataset. The presence of these outliers can significantly influence the interpretation of the relationship between height and wages, particularly if they exert undue influence on statistical analyses such as regression models. Therefore, it may be necessary to further investigate these outliers to determine whether they are legitimate data points or errors, and to consider their impact on the analysis and interpretation of results.
+
+**3) Create another data file, using your existing data, but exclude observations that have wages that exceed 400 pound sterling per hour and/or observations that have a height value of less than 40 inches. Summarize this new data set (e.g., what happens to the number of observations and the average height and wage). (15 points) **
+
+```{r}
+# Filter the data to exclude observations with wages exceeding £400 per hour and height values less than 40 inches
+filtered_data <- dta %>%
+  filter(gwage33 <= 400 & height33 >= 40)
+
+# Summary statistics for the filtered data
+summary(filtered_data)
+```
+
+Despite this decrease, the average height in the filtered dataset remained consistent at around 69.65 inches, indicating minimal impact from the filtering process. However, the average wage decreased to approximately £9.327 per hour, down from £10.39 per hour in the original dataset, likely due to the removal of high-wage outliers. While the distribution of heights appeared similar between the original and filtered datasets, the wage distribution in the filtered dataset may have been affected by the removal of high-wage outliers, resulting in a lower maximum wage value. Overall, the filtering process led to adjustments in the dataset's characteristics, primarily driven by the exclusion of extreme wage values, while height-related metrics remained relatively stable.
+
+**4) Assuming wages are the dependent variable and height is the independent variable, estimate $\beta_0$ and $\beta_1$ for the data set that includes all the observations. Re-estimate the pararmeters employing the data set created in part (3) of this exam. Summarize your estimates in a stargazer table. (15 points)**
+
+```{r, results='asis'}
+# Estimate parameters for the original dataset
+model_original <- lm(gwage33 ~ height33, data = dta)
+
+# Filter the data to exclude observations with wages exceeding £400 per hour and height values less than 40 inches
+filtered_data <- dta %>%
+  filter(gwage33 <= 400 & height33 >= 40)
+  
+# Estimate parameters for the filtered dataset
+model_filtered <- lm(gwage33 ~ height33, data = filtered_data)
+
+# Summarize estimates in a stargazer table
+stargazer(model_original, model_filtered,
+         type = "html",
+         title = "Estimates of Wages on Height",
+         column.labels = c("Original Data", "Filtered Data"))
+
+```
+
+
+**5)  a) Interpret the coefficients for the full sample and the truncated sample. (15 points) <br/> **
+
+##Interpretation of Coefficients:
+Full Sample:
+height33 coefficient: In the full sample, the coefficient for height33 is estimated to be 0.245. This means that for each additional inch increase in height, wages are expected to increase by £0.245 per hour on average, holding all other variables constant.
+Constant coefficient: The constant term is estimated to be -£6.599. This represents the expected value of wages when height is zero (which is not meaningful in this context), holding all other variables constant.
+
+Truncated Sample:
+height33 coefficient: In the truncated sample, the coefficient for height33 is estimated to be 0.268. This suggests that for each additional inch increase in height, wages are expected to increase by £0.268 per hour on average, holding all other variables constant.
+Constant coefficient: The constant term is estimated to be -£9.346. Similar to the full sample, this represents the expected value of wages when height is zero, holding all other variables constant.
+
+**5) b) Calculate the t-statistics on the coefficients and interpret them for the full sample and the truncate sample. (10 points)**
+
+```{r}
+#Calculate T-statistic for full sample
+
+pt(q = 0.245/0.176, df = 3667, lower.tail = FALSE)
+```
+
+In the full sample, the t-statistic for the coefficient of height33 is approximately 1.392. This means that the estimated coefficient of 0.245 is approximately 1.392 standard errors away from zero. The associated p-value of approximately 0.082 suggests that the coefficient is not statistically significant at conventional levels (e.g., 0.05), meaning that there is not strong evidence to reject the null hypothesis that the true coefficient is zero.
+ 
+```{r}
+#Calculate T-statistic for truncate sample
+
+pt(q = 0.268/0.072, df = 3667, lower.tail = FALSE)
+```
+
+In the truncated sample, the t-statistic for the coefficient of height33 is approximately 3.722. This means that the estimated coefficient of 0.268 is approximately 3.722 standard errors away from zero. The associated p-value of approximately 0.0001 suggests that the coefficient is statistically significant at very high levels (much less than 0.01), providing strong evidence to reject the null hypothesis that the true coefficient is zero.
+
+**6) Explain what the p-values mean for the 2 estimate coefficients for the subsample. (10 points) **
+
+Full Sample: The calculated t-statistic for the coefficient of height33 is approximately 1.392, resulting in a p-value of approximately 0.082. With a p-value of 0.082, there is not strong evidence to reject the null hypothesis that the true coefficient of height33 is zero. In other words, there is insufficient evidence to conclude that there is a statistically significant relationship between height and wages in the full sample at conventional significance levels (e.g., 0.05).
+
+For the Truncated Sample:
+The calculated t-statistic for the coefficient of height33 is approximately 3.722, resulting in a much lower p-value of approximately 0.0001. With a p-value of 0.0001, there is strong evidence to reject the null hypothesis that the true coefficient of height33 is zero. This indicates that there is a statistically significant relationship between height and wages in the truncated sample, and the coefficient estimate for height33 is highly unlikely to have occurred by chance alone.
+
+**7) Show how to calculate a 95\% confidence interval for the coefficient on height. Calculate this for the full sample and then for the truncated sample. What can be learnt from this? (10 points)**
+
+```{r}
+# For the full sample
+coefficient_full <- 0.245
+standard_error_full <- 0.176
+critical_value_full <- qt(0.975, df = 3667)  # 95% confidence level with two-tailed test
+
+confidence_interval_full <- coefficient_full + c(-1, 1) * critical_value_full * standard_error_full
+confidence_interval_full
+
+# For the truncated sample
+coefficient_truncated <- 0.268
+standard_error_truncated <- 0.072
+critical_value_truncated <- qt(0.975, df = 3667)  # 95% confidence level with two-tailed test
+
+confidence_interval_truncated <- coefficient_truncated + c(-1, 1) * critical_value_truncated * standard_error_truncated
+confidence_interval_truncated
+
+```
+
+For the full sample: The 95% confidence interval for the coefficient on height ranges from approximately -0.1001 to 0.5901. We are 95% confident that the true coefficient on height in the population falls within this range. This suggests that, in the full sample, there is uncertainty about the exact impact of height on wages, as the interval includes both positive and negative values. Therefore, the relationship between height and wages in the full sample is not statistically conclusive.
+
+For the truncated sample: The 95% confidence interval for the coefficient on height ranges from approximately 0.1268 to 0.4092. We are 95% confident that the true coefficient on height in the population falls within this range. In the truncated sample, this interval suggests a more confident and narrower range of potential values for the coefficient. Specifically, it indicates that there is strong evidence to suggest a positive effect of height on wages in the truncated sample, as all values within the interval are positive. Therefore, the relationship between height and wages in the truncated sample is statistically significant and leans towards a positive association.
+
+
+**8) Do we accept or reject the null hypothesis that $\beta_1 =0$ for $\alpha = .01$ and a two-sided alternative? Explain your answer. (10 points)**
+
+To determine whether we accept or reject the null hypothesis that the coefficient of height ($\beta_1$) is zero at a significance level of $\alpha = 0.01$ and a two-sided alternative, we need to compare the p-value associated with the coefficient of height in our regression analysis with the chosen significance level.
+
+For the full sample:
+
+The calculated p-value for the coefficient of height is approximately 0.082.
+Since the p-value (0.082) is greater than the significance level ($\alpha = 0.01$), we fail to reject the null hypothesis.
+Therefore, we do not have enough evidence to conclude that there is a significant relationship between height and wages in the full sample at the 0.01 significance level.
+For the truncated sample:
+
+The calculated p-value for the coefficient of height is approximately 0.0001.
+Since the p-value (0.0001) is much less than the significance level ($\alpha = 0.01$), we reject the null hypothesis.
+Therefore, we have strong evidence to conclude that there is a significant positive relationship between height and wages in the truncated sample at the 0.01 significance level.
+
+In summary, we reject the null hypothesis ($\beta_1 = 0$) for the truncated sample but fail to reject it for the full sample at a significance level of $\alpha = 0.01$ and a two-sided alternative. This indicates that the relationship between height and wages is statistically significant only in the truncated sample, suggesting that height does have a significant effect on wages within that specific subset of observations.
