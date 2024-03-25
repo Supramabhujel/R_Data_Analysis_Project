@@ -60,7 +60,7 @@ Height positively correlates with wages, especially in the filtered sample. Furt
 To reproduce the analysis:
 
 1. Clone this repository to your local machine.
-2. Open the "Analysis.Rmd" file in RStudio or any R Markdown editor.
+2. Open the "Statistical Analysis.Rmd" file in RStudio or any R Markdown editor.
 3. Run the code chunks sequentially to reproduce the analysis.
 4. Feel free to modify the code or add your own analysis as needed.
 
