@@ -20,7 +20,7 @@ The project structure is designed to provide a comprehensive analysis of the dat
 
 ## Data
 
-The dataset used in this analysis is "Ch4_Exercise5_Height_and_Wages_UK.dta", which provides information on height, wages, and gender for individuals in the UK.
+The dataset used in this analysis is "Height_and_Wages_UK.dta", which provides information on height, wages, and gender for individuals in the UK.
 
 ## Analysis
 
