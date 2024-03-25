@@ -17,7 +17,7 @@ Welcome to the Statistical Regression Analysis of Height and Weight Data reposit
 
 The project structure is designed to provide a comprehensive analysis of the dataset. Here's what you'll find:
 
-- **Analysis.Rmd**: This R Markdown file contains the code and analysis for the statistical regression analysis. It includes tasks such as data summarization, visualization of relationships, data filtering, and regression analysis.
+- **Statistical Analysis.Rmd**: This R Markdown file contains the code and analysis for the statistical regression analysis. It includes tasks such as data summarization, visualization of relationships, data filtering, and regression analysis.
   
 
 ## Data
