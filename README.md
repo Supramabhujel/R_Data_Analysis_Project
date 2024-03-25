@@ -2,6 +2,7 @@
 
 Welcome to the Statistical Regression Analysis of Height and Weight Data repository! This project focuses on analyzing a dataset related to height and wages in the UK using R.
 
+
 **Table of Contents**
 - [Project Overview](#project-overview)
 - [Data](#data)
@@ -17,6 +18,7 @@ Welcome to the Statistical Regression Analysis of Height and Weight Data reposit
 The project structure is designed to provide a comprehensive analysis of the dataset. Here's what you'll find:
 
 - **Analysis.Rmd**: This R Markdown file contains the code and analysis for the statistical regression analysis. It includes tasks such as data summarization, visualization of relationships, data filtering, and regression analysis.
+  
 
 ## Data
 
@@ -39,9 +41,14 @@ Height: Average 69.40 inches, ranging from 22.44 to 79.53 inches.
 Analysis:
 3. Scatterplot shows a clustered distribution of height vs. wages, with noticeable outliers.
 Filtered dataset maintains average height but sees a decrease in average wage.
-4. Regression Analysis:
+---
+![Screenshot 2024-03-24 at 8 53 58 PM](https://github.com/Supramabhujel/Statistical-Regression-Analysis-of-Height-and-Wage-Data/assets/164811033/26aff98d-88b4-46c7-abcf-6ad624331c5e)
+
+---
+
+5. Regression Analysis:
 Each additional inch in height associates with an increase in wages by £0.245 per hour in the full sample and £0.268 per hour in the filtered sample.
-5. Significance:
+6. Significance:
 Height's effect on wages is statistically significant only in the filtered sample.
 Confidence intervals confirm a positive effect of height on wages in the filtered sample.
 
@@ -71,5 +78,5 @@ If you haven't already installed these packages, you can do so using `install.pa
 
 ## References 
 
-- Real econometrics "THE RIGHT TOOLS TO ANSWER IMPORTANT QUESTIONS" SECOND EDITION by Michael A. Bailey
+- Real econometrics "THE RIGHT TOOLS TO ANSWER IMPORTANT QUESTIONS" SECOND EDITION by Michael A. Bailey 📖
 
